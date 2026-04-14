@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Kaleidoscope Drawing</title>
+  <link rel="stylesheet" href="style.css?v=2">
+</head>
+<body>
+  <div id="app">
+
+    <!-- ═══ TOP BAR (desktop) ═══ -->
+    <header id="top-bar">
+      <div class="tb-group">
+        <span class="tb-label">Symmetry</span>
+        <div class="tb-btns" id="sym-btns">
+          <button class="sym-btn" data-n="2">2</button>
+          <button class="sym-btn" data-n="3">3</button>
+          <button class="sym-btn" data-n="4">4</button>
+          <button class="sym-btn active" data-n="6">6</button>
+          <button class="sym-btn" data-n="8">8</button>
+          <button class="sym-btn" data-n="12">12</button>
+          <button class="sym-btn" data-n="16">16</button>
+          <button class="sym-btn" data-n="24">24</button>
+        </div>
+      </div>
+
+      <div class="tb-group">
+        <span class="tb-label">Effects</span>
+        <div class="tb-btns">
+          <button class="fx-btn active" data-fx="mirror" title="Mirror reflection">Mirror</button>
+          <button class="fx-btn" data-fx="rainbow" title="Rainbow colors (R)">Rainbow</button>
+          <button class="fx-btn" data-fx="glow" title="Glow effect">Glow</button>
+          <button class="fx-btn" data-fx="sparkle" title="Sparkle particles">Sparkle</button>
+        </div>
+      </div>
+
+      <div class="tb-group">
+        <span class="tb-label">Guides</span>
+        <div class="tb-btns">
+          <button class="fx-btn active" id="guide-center-btn" title="Center crosshair (C)">Center</button>
+          <button class="fx-btn active" id="guide-seg-btn" title="Segment lines (G)">Lines</button>
+        </div>
+      </div>
+
+      <div class="tb-actions">
+        <button class="act-btn" id="btn-undo" title="Undo (Ctrl+Z)">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.5 8c-2.65 0-5.05.99-6.9 2.6L2 7v9h9l-3.62-3.62c1.39-1.16 3.16-1.88 5.12-1.88 3.54 0 6.55 2.31 7.6 5.5l2.37-.78C21.08 11.03 17.15 8 12.5 8z"/></svg>
+        </button>
+        <button class="act-btn" id="btn-redo" title="Redo (Ctrl+Y)">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.4 10.6C16.55 8.99 14.15 8 11.5 8c-4.65 0-8.58 3.03-9.96 7.22L3.9 16c1.05-3.19 4.05-5.5 7.6-5.5 1.95 0 3.73.72 5.12 1.88L13 16h9V7l-3.6 3.6z"/></svg>
+        </button>
+        <button class="act-btn" id="btn-save" title="Save PNG (Ctrl+S)">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+        </button>
+        <button class="act-btn danger" id="btn-clear" title="Clear canvas">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- ═══ MAIN AREA ═══ -->
+    <div id="main-area">
+
+      <!-- Left Sidebar (desktop) -->
+      <aside id="sidebar">
+        <div class="sb-section">
+          <div class="sb-label">Tools</div>
+          <div class="tool-grid" id="tool-grid">
+            <button class="tool-btn active" data-tool="pen" title="Pen (B)">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+              <span>Pen</span>
+            </button>
+            <button class="tool-btn" data-tool="brush" title="Soft Brush">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 14c-1.66 0-3 1.34-3 3 0 1.31-1.16 2-2 2 .92 1.22 2.49 2 4 2 2.21 0 4-1.79 4-4 0-1.66-1.34-3-3-3zm13.71-9.37-1.34-1.34a1 1 0 0 0-1.41 0L9 12.25 11.75 15l8.96-8.96a1 1 0 0 0 0-1.41z"/></svg>
+              <span>Brush</span>
+            </button>
+            <button class="tool-btn" data-tool="marker" title="Marker">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.5 1.15c-.53 0-1.04.19-1.43.58L5.37 13.46c-.78.78-.78 2.05 0 2.83L8.2 19.1c.78.78 2.05.78 2.83 0l11.7-11.7c.79-.79.79-2.07 0-2.86l-1.8-1.8c-.39-.39-.9-.59-1.43-.59zM5 20v-2h14v2H5z"/></svg>
+              <span>Marker</span>
+            </button>
+            <button class="tool-btn" data-tool="spray" title="Spray">
+              <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="7" cy="7" r="1.5"/><circle cx="11" cy="5" r="1"/><circle cx="14" cy="8" r="1.5"/><circle cx="9" cy="11" r="1"/><circle cx="13" cy="12" r="1.2"/><path d="M5 17h14v2H5z"/></svg>
+              <span>Spray</span>
+            </button>
+            <button class="tool-btn" data-tool="eraser" title="Eraser (E)">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M15.14 3c-.51 0-1.02.2-1.41.59L2.59 14.73c-.78.77-.78 2.04 0 2.83L5.03 20H20v-2h-6.74l7.45-7.45c.78-.78.78-2.05 0-2.83l-4.15-4.13c-.39-.39-.9-.59-1.42-.59zM6.44 19l-2.27-2.27 7.09-7.09 2.27 2.27L6.44 19z"/></svg>
+              <span>Eraser</span>
+            </button>
+            <button class="tool-btn" data-tool="dot" title="Dot">
+              <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="6"/></svg>
+              <span>Dot</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="sb-section">
+          <div class="sb-label">Pattern</div>
+          <div class="pattern-grid" id="pattern-grid"></div>
+        </div>
+      </aside>
+
+      <!-- Canvas Container -->
+      <div id="canvas-container">
+        <canvas id="guide-canvas"></canvas>
+        <canvas id="main-canvas"></canvas>
+      </div>
+    </div>
+
+    <!-- ═══ BOTTOM BAR (desktop) ═══ -->
+    <footer id="bottom-bar">
+      <div class="bb-group">
+        <label>Size</label>
+        <input type="range" id="size-slider" min="1" max="150" value="20">
+        <output id="size-out">20</output>
+      </div>
+      <div class="bb-group">
+        <label>Opacity</label>
+        <input type="range" id="opacity-slider" min="5" max="100" value="100">
+        <output id="opacity-out">100</output><span>%</span>
+      </div>
+      <div class="bb-group">
+        <label>Color</label>
+        <label class="color-swatch-wrap">
+          <input type="color" id="color-picker" value="#ff4466">
+          <span class="color-swatch" id="color-preview" style="background:#ff4466"></span>
+        </label>
+        <div class="swatches-row" id="recent-swatches"></div>
+      </div>
+      <div class="bb-group">
+        <label>Background</label>
+        <label class="color-swatch-wrap">
+          <input type="color" id="bg-picker" value="#ffffff">
+          <span class="color-swatch" id="bg-preview" style="background:#ffffff"></span>
+        </label>
+        <div class="bg-presets-row">
+          <button class="bg-dot active" data-color="#ffffff" style="--c:#ffffff" title="White"></button>
+          <button class="bg-dot" data-color="#000000" style="--c:#000000" title="Black"></button>
+          <button class="bg-dot" data-color="#0d0d0d" style="--c:#0d0d0d" title="Dark"></button>
+          <button class="bg-dot" data-color="#1a1a2e" style="--c:#1a1a2e" title="Midnight"></button>
+          <button class="bg-dot" data-color="#16213e" style="--c:#16213e" title="Navy"></button>
+          <button class="bg-dot" data-color="#1a0533" style="--c:#1a0533" title="Purple"></button>
+        </div>
+      </div>
+    </footer>
+
+  </div><!-- #app -->
+
+  <!-- ═══ MOBILE UI ═══ -->
+  <div id="mobile-top-bar">
+    <button class="m-act-btn" id="m-undo" title="Undo">↩</button>
+    <button class="m-act-btn" id="m-redo" title="Redo">↪</button>
+    <button class="m-act-btn" id="m-save" title="Save">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+    </button>
+    <button class="m-act-btn danger" id="m-clear" title="Clear">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+    </button>
+  </div>
+
+  <button id="sheet-toggle-btn">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
+    Tools
+  </button>
+
+  <div id="bottom-sheet" class="sheet-closed">
+    <div class="sheet-handle" id="sheet-handle"></div>
+    <div class="sheet-tabs">
+      <button class="stab active" data-tab="tools">Tools</button>
+      <button class="stab" data-tab="patterns">Pattern</button>
+      <button class="stab" data-tab="color">Color</button>
+      <button class="stab" data-tab="settings">Settings</button>
+      <button id="sheet-close-btn" title="Close">✕</button>
+    </div>
+    <div class="sheet-body">
+
+      <!-- Tools Tab -->
+      <div class="tab-pane active" id="m-tab-tools">
+        <div class="m-tool-grid">
+          <button class="m-tool-btn active" data-tool="pen">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+            Pen
+          </button>
+          <button class="m-tool-btn" data-tool="brush">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 14c-1.66 0-3 1.34-3 3 0 1.31-1.16 2-2 2 .92 1.22 2.49 2 4 2 2.21 0 4-1.79 4-4 0-1.66-1.34-3-3-3zm13.71-9.37-1.34-1.34a1 1 0 0 0-1.41 0L9 12.25 11.75 15l8.96-8.96a1 1 0 0 0 0-1.41z"/></svg>
+            Brush
+          </button>
+          <button class="m-tool-btn" data-tool="marker">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.5 1.15c-.53 0-1.04.19-1.43.58L5.37 13.46c-.78.78-.78 2.05 0 2.83L8.2 19.1c.78.78 2.05.78 2.83 0l11.7-11.7c.79-.79.79-2.07 0-2.86l-1.8-1.8c-.39-.39-.9-.59-1.43-.59zM5 20v-2h14v2H5z"/></svg>
+            Marker
+          </button>
+          <button class="m-tool-btn" data-tool="spray">
+            <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="7" cy="7" r="1.5"/><circle cx="11" cy="5" r="1"/><circle cx="14" cy="8" r="1.5"/><circle cx="9" cy="11" r="1"/><circle cx="13" cy="12" r="1.2"/><path d="M5 17h14v2H5z"/></svg>
+            Spray
+          </button>
+          <button class="m-tool-btn" data-tool="eraser">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M15.14 3c-.51 0-1.02.2-1.41.59L2.59 14.73c-.78.77-.78 2.04 0 2.83L5.03 20H20v-2h-6.74l7.45-7.45c.78-.78.78-2.05 0-2.83l-4.15-4.13c-.39-.39-.9-.59-1.42-.59zM6.44 19l-2.27-2.27 7.09-7.09 2.27 2.27L6.44 19z"/></svg>
+            Eraser
+          </button>
+          <button class="m-tool-btn" data-tool="dot">
+            <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="6"/></svg>
+            Dot
+          </button>
+        </div>
+        <div class="m-slider-row">
+          <label>Size <span id="m-size-val">20</span></label>
+          <input type="range" id="m-size-slider" min="1" max="150" value="20">
+        </div>
+        <div class="m-slider-row">
+          <label>Opacity <span id="m-opacity-val">100</span>%</label>
+          <input type="range" id="m-opacity-slider" min="5" max="100" value="100">
+        </div>
+      </div>
+
+      <!-- Patterns Tab -->
+      <div class="tab-pane" id="m-tab-patterns">
+        <div class="m-pattern-grid" id="m-pattern-grid"></div>
+      </div>
+
+      <!-- Color Tab -->
+      <div class="tab-pane" id="m-tab-color">
+        <div class="m-color-row">
+          <span>Stroke</span>
+          <label class="color-swatch-wrap">
+            <input type="color" id="m-color-picker" value="#ff4466">
+            <span class="color-swatch big" id="m-color-preview" style="background:#ff4466"></span>
+          </label>
+        </div>
+        <div id="m-recent-swatches" class="swatches-row"></div>
+        <div class="m-color-row" style="margin-top:12px">
+          <span>Background</span>
+          <label class="color-swatch-wrap">
+            <input type="color" id="m-bg-picker" value="#ffffff">
+            <span class="color-swatch big" id="m-bg-preview" style="background:#ffffff"></span>
+          </label>
+        </div>
+        <div class="bg-presets-row">
+          <button class="bg-dot active" data-color="#ffffff" style="--c:#ffffff"></button>
+          <button class="bg-dot" data-color="#000000" style="--c:#000000"></button>
+          <button class="bg-dot" data-color="#0d0d0d" style="--c:#0d0d0d"></button>
+          <button class="bg-dot" data-color="#1a1a2e" style="--c:#1a1a2e"></button>
+          <button class="bg-dot" data-color="#16213e" style="--c:#16213e"></button>
+          <button class="bg-dot" data-color="#1a0533" style="--c:#1a0533"></button>
+        </div>
+      </div>
+
+      <!-- Settings Tab -->
+      <div class="tab-pane" id="m-tab-settings">
+        <div class="m-setting-group">
+          <label>Symmetry</label>
+          <div class="tb-btns" id="m-sym-btns">
+            <button class="sym-btn" data-n="2">2</button>
+            <button class="sym-btn" data-n="3">3</button>
+            <button class="sym-btn" data-n="4">4</button>
+            <button class="sym-btn active" data-n="6">6</button>
+            <button class="sym-btn" data-n="8">8</button>
+            <button class="sym-btn" data-n="10">10</button>
+            <button class="sym-btn" data-n="12">12</button>
+            <button class="sym-btn" data-n="16">16</button>
+            <button class="sym-btn" data-n="24">24</button>
+          </div>
+        </div>
+        <div class="m-setting-group">
+          <label>Effects</label>
+          <div class="tb-btns">
+            <button class="fx-btn active" data-fx="mirror">Mirror</button>
+            <button class="fx-btn" data-fx="rainbow">Rainbow</button>
+            <button class="fx-btn" data-fx="glow">Glow</button>
+            <button class="fx-btn" data-fx="sparkle">Sparkle</button>
+          </div>
+        </div>
+        <div class="m-setting-group">
+          <label>Guides</label>
+          <div class="tb-btns">
+            <button class="fx-btn active" id="m-guide-center">Center</button>
+            <button class="fx-btn active" id="m-guide-seg">Lines</button>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- .sheet-body -->
+  </div><!-- #bottom-sheet -->
+
+  <script src="app.js?v=2"></script>
+</body>
+</html>
